@@ -64,15 +64,7 @@ vec3 get_rsm_gi(vec3 scene_pos, vec3 normal, float skylight, float dither) {
 
         float falloff = rcp(dist_sq + RSM_GI_DEPTH_BIAS);
 
-        vec2 mid_clip = 0.5 * (shadow_clip_pos.xy + sample_clip);
-        vec2 mid_uv = mid_clip / get_distortion_factor(mid_clip) * 0.5 + 0.5;
-        float mid_depth = texelFetch(shadowtex0, ivec2(mid_uv * vec2(shadow_res)), 0).x;
-        vec3 mid_clip_pos = vec3(mid_clip, (mid_depth * 2.0 - 1.0) / SHADOW_DEPTH_SCALE);
-        vec3 mid_blocker = transform(shadowModelViewInverse, project_ortho(shadowProjectionInverse, mid_clip_pos));
-        float occl = dot(mid_blocker - 0.5 * (scene_pos + vpl_scene), light_dir);
-        float vis = 1.0 - linear_step(RSM_GI_LEAK_BIAS, RSM_GI_LEAK_BIAS + 1.0, occl);
-
-        gi += vpl_albedo * (vpl_lit * cos_receiver * cos_vpl * falloff * weight * vis);
+        gi += vpl_albedo * (vpl_lit * cos_receiver * cos_vpl * falloff * weight);
     }
 
     gi *= 12.0 * sqr(RSM_GI_RADIUS) * rcp(float(RSM_GI_SAMPLES));
