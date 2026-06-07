@@ -262,10 +262,13 @@ vec3 get_diffuse_lighting(
 #endif
 
     vec3 bounced = vec3(0.0);
+#if defined RSM_GI && defined PROGRAM_DEFERRED4
+#else
     if (DO_BOUNCED_LIGHTING) {
         bounced = 0.033 * (1.0 - shadows) * (1.0 - 0.1 * max0(normal.y))
             * pow1d5(ao + eps) * pow4(light_levels.y) * BOUNCED_LIGHT_I;
     }
+#endif
 
     vec3 sss = sss_approx(
                    material.albedo,

@@ -152,6 +152,13 @@ const float wetnessHalflife         = 70.0;
   #define GTAO_RADIUS 2.0 // [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 4.0 4.1 4.2 4.3 4.4 4.5 4.6 4.7 4.8 4.9 5.0 5.1 5.2 5.3 5.4 5.5 5.6 5.7 5.8 5.9 6.0 6.1 6.2 6.3 6.4 6.5 6.6 6.7 6.8 6.9 7.0 7 .1 7.2 7.3 7.4 7.5 7.6 7.7 7.8 7.9 8.0]
 
   #define VANILLA_AO
+  
+  #define RSM_GI           
+  #define RSM_GI_SAMPLES 24            // [8 12 16 20 24 28 32 40 48 64] Number of shadow map taps per pixel. Higher is smoother but slower
+  #define RSM_GI_RADIUS 6.0            // [2.0 3.0 4.0 5.0 6.0 7.0 8.0 10.0 12.0 14.0 16.0 20.0] Maximum gather radius in blocks
+  #define RSM_GI_INTENSITY 1.00        // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.40 1.50 1.60 1.70 1.80 1.90 2.00 2.25 2.50 2.75 3.00 3.50 4.00] Brightness of the indirect bounce
+  #define RSM_GI_DEPTH_BIAS 0.50       // [0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00 1.25 1.50 2.00] Softens the 1/distance^2 falloff to suppress fireflies near contacts
+  #define RSM_GI_LEAK_BIAS 0.50        // [0.10 0.20 0.30 0.40 0.50 0.75 1.00 1.50 2.00 3.00] Light leak suppression tolerance in blocks. Lower cuts more leaking through walls, but too low erodes contact bounce
 
 // Colored Lights Settings
 

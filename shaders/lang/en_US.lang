@@ -25,6 +25,7 @@ screen.refraction                      = Refraction
 screen.light_sources                   = Light Sources
 screen.shadows                         = Shadows
 screen.ao                              = Ambient Occlusion
+screen.gi                              = Global Illumination
 screen.color_grading                   = Color Grading
 screen.exposure                        = Exposure
 screen.lpv_vl                          = Colored Lights Fog Scattering
@@ -176,6 +177,19 @@ option.GTAO_SLICES                     = GTAO Slices
 option.GTAO_SLICES.comment             = Controls how noisy the GTAO appears
 option.GTAO_HORIZON_STEPS              = GTAO Horizon Steps
 option.GTAO_HORIZON_STEPS.comment      = Controls the accuracy of GTAO
+
+option.RSM_GI                          = Reflective Shadow Maps
+option.RSM_GI.comment                  = One-bounce indirect sunlight/moonlight gathered from the shadow map. Surfaces pick up the colour of nearby sunlit blocks. Resolved over time by TAA
+option.RSM_GI_SAMPLES                  = GI Samples
+option.RSM_GI_SAMPLES.comment          = Number of shadow map taps per pixel. Higher values give smoother indirect lighting at a higher performance cost
+option.RSM_GI_RADIUS                   = GI Radius
+option.RSM_GI_RADIUS.comment           = Maximum distance in blocks over which indirect light is gathered
+option.RSM_GI_INTENSITY                = GI Intensity
+option.RSM_GI_INTENSITY.comment        = Brightness of the indirect bounce light
+option.RSM_GI_DEPTH_BIAS               = GI Depth Bias
+option.RSM_GI_DEPTH_BIAS.comment       = Softens the distance falloff to suppress bright speckles (fireflies) where surfaces meet
+option.RSM_GI_LEAK_BIAS                = GI Leak Suppression
+option.RSM_GI_LEAK_BIAS.comment        = How aggressively indirect light is blocked by walls. Lower values reduce light leaking into enclosed areas, but setting it too low erodes the bounce on surfaces close to where they meet
 
 option.SUN_NR                          = §c▍ §fRed
 option.SUN_NG                          = §a▍ §fGreen

@@ -17,7 +17,12 @@ layout(location = 0) out vec4 shadowcolor0_out;
 layout(location = 0) out vec3 shadowcolor0_out;
 #endif
 
+#ifdef RSM_GI
+layout(location = 1) out vec4 shadowcolor1_out;
+/* RENDERTARGETS: 0,1 */
+#else
 /* RENDERTARGETS: 0 */
+#endif
 
 in vec2 uv;
 
@@ -26,6 +31,10 @@ flat in vec3 tint;
 
 #ifdef WATER_CAUSTICS
 in vec3 scene_pos;
+#endif
+
+#ifdef RSM_GI
+flat in vec3 rsm_scene_normal;
 #endif
 
 // ------------
@@ -59,6 +68,22 @@ uniform vec3 light_dir;
 
 #include "/include/surface/water_normal.glsl"
 #include "/include/utility/color.glsl"
+
+#ifdef RSM_GI
+#include "/include/utility/encoding.glsl"
+
+// Encode albedo (flux) and scene-space normal into the reflective shadow map
+void write_rsm_data(vec3 albedo_srgb) {
+    vec3 albedo = clamp01(srgb_eotf_inv(albedo_srgb) * rec709_to_working_color);
+
+    shadowcolor1_out = vec4(
+        pack_unorm_2x8(encode_unit_vector(normalize(rsm_scene_normal))),
+        pack_unorm_2x8(albedo.rg),
+        pack_unorm_2x8(albedo.b, 0.0),
+        1.0
+    );
+}
+#endif
 
 const float air_n = 1.000293; // for 0°C and 1 atm
 const float water_n = 1.333; // for 20°C
@@ -152,6 +177,9 @@ float get_water_caustics() {
 void main() {
 #ifndef COLORWHEEL
     if (material_mask == 1) { // Water
+#ifdef RSM_GI
+        shadowcolor1_out = vec4(0.0);
+#endif
 #if defined PROGRAM_SHADOW_WATER || defined PROGRAM_SHADOW_FALLBACK
         vec3 biome_water_color = srgb_eotf_inv(tint) * rec709_to_working_color;
         vec3 absorption_coeff = biome_water_coeff(biome_water_color);
@@ -168,6 +196,10 @@ void main() {
         if (base_color.a < 0.1) {
             discard;
         }
+
+#ifdef RSM_GI
+        write_rsm_data(base_color.rgb * tint);
+#endif
 
         shadowcolor0_out = mix(vec3(1.0), base_color.rgb * tint, base_color.a);
         shadowcolor0_out
@@ -186,6 +218,10 @@ void main() {
     if (base_color.a < 0.1) {
         discard;
     }
+
+#ifdef RSM_GI
+    write_rsm_data(base_color.rgb);
+#endif
 
     vec3 outColor = mix(vec3(1.0), base_color.rgb, base_color.a);
     outColor = 0.25 * srgb_eotf_inv(outColor) * rec709_to_rec2020;

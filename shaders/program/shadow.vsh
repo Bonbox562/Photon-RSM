@@ -20,6 +20,10 @@ flat out vec3 tint;
 out vec3 scene_pos;
 #endif
 
+#ifdef RSM_GI
+flat out vec3 rsm_scene_normal;
+#endif
+
 // --------------
 //   Attributes
 // --------------
@@ -85,6 +89,11 @@ void main() {
     uv = gl_MultiTexCoord0.xy;
     material_mask = uint(mc_Entity.x - 10000.0);
     tint = gl_Color.rgb;
+
+#ifdef RSM_GI
+    rsm_scene_normal
+        = normalize(mat3(shadowModelViewInverse) * (gl_NormalMatrix * gl_Normal));
+#endif
 
 #if defined COLORED_LIGHTS && !defined PROGRAM_SHADOW_ENTITIES
     update_voxel_map(material_mask);
