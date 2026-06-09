@@ -157,7 +157,6 @@ const float wetnessHalflife         = 70.0;
   #define RSM_GI_SAMPLES 24            // [8 12 16 20 24 28 32 40 48 64] Number of shadow map taps per pixel. Higher is smoother but slower
   #define RSM_GI_RADIUS 6.0            // [2.0 3.0 4.0 5.0 6.0 7.0 8.0 10.0 12.0 14.0 16.0 20.0] Maximum gather radius in blocks
   #define RSM_GI_INTENSITY 1.00        // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.40 1.50 1.60 1.70 1.80 1.90 2.00 2.25 2.50 2.75 3.00 3.50 4.00] Brightness of the indirect bounce
-  #define RSM_GI_DEPTH_BIAS 0.50       // [0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00 1.25 1.50 2.00] Softens the 1/distance^2 falloff to suppress fireflies near contacts
 
 // Colored Lights Settings
 

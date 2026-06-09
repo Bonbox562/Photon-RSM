@@ -186,8 +186,6 @@ option.RSM_GI_RADIUS                   = GI Radius
 option.RSM_GI_RADIUS.comment           = Maximum distance in blocks over which indirect light is gathered
 option.RSM_GI_INTENSITY                = GI Intensity
 option.RSM_GI_INTENSITY.comment        = Brightness of the indirect bounce light
-option.RSM_GI_DEPTH_BIAS               = GI Depth Bias
-option.RSM_GI_DEPTH_BIAS.comment       = Softens the distance falloff to suppress bright speckles (fireflies) where surfaces meet
 
 option.SUN_NR                          = §c▍ §fRed
 option.SUN_NG                          = §a▍ §fGreen

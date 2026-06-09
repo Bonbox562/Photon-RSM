@@ -21,6 +21,7 @@ vec3 get_rsm_gi(vec3 scene_pos, vec3 normal, float skylight, float dither) {
     float radius_clip = RSM_GI_RADIUS * shadowProjection[0].x;
 
     ivec2 shadow_res = textureSize(shadowtex0, 0);
+    float vpl_area_sq = sqr(RSM_GI_RADIUS) * rcp(float(RSM_GI_SAMPLES));
 
     vec3 gi = vec3(0.0);
     float rotation = dither * tau;
@@ -42,12 +43,13 @@ vec3 get_rsm_gi(vec3 scene_pos, vec3 normal, float skylight, float dither) {
         ivec2 texel = ivec2(sample_uv * vec2(shadow_res));
 
         vec4 rsm_data = texelFetch(shadowcolor1, texel, 0);
-        if(rsm_data.a < 0.5) {
+        vec2 albedo_b_valid = unpack_unorm_2x8(rsm_data.w);
+        if(albedo_b_valid.y < 0.5) {
             continue;
         }
 
-        vec3 vpl_normal = decode_unit_vector(unpack_unorm_2x8(rsm_data.x));
-        vec3 vpl_albedo = vec3(unpack_unorm_2x8(rsm_data.y), unpack_unorm_2x8(rsm_data.z).x);
+        vec3 vpl_normal = decode_unit_vector(rsm_data.xy);
+        vec3 vpl_albedo = vec3(unpack_unorm_2x8(rsm_data.z), albedo_b_valid.x);
 
         float sample_depth = texelFetch(shadowtex0, texel, 0).x;
         vec3 vpl_clip = vec3(sample_clip, (sample_depth * 2.0 - 1.0) / SHADOW_DEPTH_SCALE);
@@ -62,7 +64,7 @@ vec3 get_rsm_gi(vec3 scene_pos, vec3 normal, float skylight, float dither) {
         float cos_vpl = max0(dot(vpl_normal, -dir_n));
         float vpl_lit = max0(dot(vpl_normal, light_dir));
 
-        float falloff = rcp(dist_sq + RSM_GI_DEPTH_BIAS);
+        float falloff = rcp(dist_sq + vpl_area_sq);
 
         gi += vpl_albedo * (vpl_lit * cos_receiver * cos_vpl * falloff * weight);
     }

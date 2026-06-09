@@ -72,15 +72,14 @@ uniform vec3 light_dir;
 #ifdef RSM_GI
 #include "/include/utility/encoding.glsl"
 
-// Encode albedo (flux) and scene-space normal into the reflective shadow map
 void write_rsm_data(vec3 albedo_srgb) {
     vec3 albedo = clamp01(srgb_eotf_inv(albedo_srgb) * rec709_to_working_color);
+    vec2 oct_normal = encode_unit_vector(normalize(rsm_scene_normal));
 
     shadowcolor1_out = vec4(
-        pack_unorm_2x8(encode_unit_vector(normalize(rsm_scene_normal))),
-        pack_unorm_2x8(albedo.rg),
-        pack_unorm_2x8(albedo.b, 0.0),
-        1.0
+        oct_normal,
+        pack_unorm_2x8(albedo.r, albedo.g),
+        pack_unorm_2x8(albedo.b, 1.0)
     );
 }
 #endif
