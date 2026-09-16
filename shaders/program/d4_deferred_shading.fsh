@@ -83,8 +83,7 @@ uniform sampler3D light_sampler_b;
 uniform sampler2D depthtex2; // minecraft cloud texture
 #endif
 
-#ifndef WORLD_NETHER
-#ifdef SHADOW
+#if defined SHADOW && (defined WORLD_OVERWORLD || defined WORLD_END)
 uniform sampler2D shadowtex0;
 uniform sampler2DShadow shadowtex1;
 
@@ -94,7 +93,6 @@ uniform sampler2D shadowcolor0;
 
 #ifdef RSM_GI
 uniform sampler2D shadowcolor1;
-#endif
 #endif
 #endif
 
@@ -172,7 +170,8 @@ const bool colortex11MipmapEnabled = true;
 #include "/include/lighting/diffuse_lighting.glsl"
 #include "/include/lighting/shadows/common.glsl"
 #include "/include/lighting/shadows/pcss.glsl"
-#if defined RSM_GI && defined SHADOW
+#if defined RSM_GI && defined SHADOW \
+    && (defined WORLD_OVERWORLD || defined WORLD_END)
 #include "/include/lighting/gi/rsm.glsl"
 #endif
 #include "/include/lighting/shadows/ssrt.glsl"
@@ -592,7 +591,8 @@ void main() {
             LoV
         );
 
-#if defined RSM_GI && defined SHADOW
+#if defined RSM_GI && defined SHADOW \
+    && (defined WORLD_OVERWORLD || defined WORLD_END)
         {
             float rsm_dither = texelFetch(noisetex, texel & 511, 0).b;
             rsm_dither = r1(frameCounter, rsm_dither);
