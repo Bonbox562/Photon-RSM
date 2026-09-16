@@ -33,6 +33,8 @@ flat in vec3 moon_color;
 uniform sampler2D gtexture;
 uniform sampler2D noisetex;
 
+uniform float rainStrength;
+
 uniform int moonPhase;
 uniform int renderStage;
 
